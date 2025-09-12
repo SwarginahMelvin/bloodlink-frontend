@@ -45,10 +45,12 @@ function Feature({ title, description, icon }) {
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [view, setView] = useState('dashboard')
+  const [view, setView] = useState('welcome')
   const [withinKm, setWithinKm] = useState('')
   const [location, setLocation] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showLoginSuccess, setShowLoginSuccess] = useState(false)
+  const [showSignupSuccess, setShowSignupSuccess] = useState(false)
   const [selectedDonor, setSelectedDonor] = useState(null)
   const [isRegistered, setIsRegistered] = useState(false)
 
@@ -90,6 +92,7 @@ function App() {
   }
   return (
     <div className="page">
+      {!(view === 'welcome' || view === 'login' || view === 'signup') && (
       <header className="header">
         <div className="header__left">
           <button className="avatar" aria-label="Open profile" onClick={() => setView('profile')}>
@@ -118,6 +121,7 @@ function App() {
           <span className="material-symbols-rounded">menu</span>
         </button>
       </header>
+      )}
       {mobileMenuOpen && (
         <div id="mobile-menu" className="mobile-menu" role="menu">
           <button className="menu-item" onClick={() => { setView('dashboard'); setMobileMenuOpen(false) }}>Home</button>
@@ -559,17 +563,226 @@ function App() {
 
         {view === 'welcome' && (
           <div className="welcome">
-            <div className="welcome__logo">🩸</div>
-            <div className="welcome__brand"><strong>CONNECT</strong> <span className="accent">DONATE</span> SAVE</div>
-            <h1 className="welcome__title">Welcome!!</h1>
-            <p className="welcome__tag">Connect.<span className="accent">Donate</span>.Save</p>
-            <div className="welcome__actions">
-              <Button className="welcome__btn">Login</Button>
-              <span className="welcome__or">or</span>
-              <Button className="welcome__btn">Sign up</Button>
+            <div className="welcome-card">
+              <div className="welcome__logo">🩸</div>
+              <div className="welcome__brand"><strong>CONNECT</strong> <span className="accent">DONATE</span> SAVE</div>
+              <h1 className="welcome__title">Welcome!!</h1>
+              <p className="welcome__tag">Connect.<span className="accent">Donate</span>.Save</p>
+              <div className="welcome__actions">
+                <Button className="welcome__btn" onClick={() => setView('login')}>Login</Button>
+                <span className="welcome__or">or</span>
+                <Button className="welcome__btn" onClick={() => setView('signup')}>Sign up</Button>
+              </div>
+              <p className="welcome__terms">Terms of privacy & policy<br/>conditions</p>
             </div>
-            <p className="welcome__terms">Terms of privacy & policy<br/>conditions</p>
             <p className="welcome__foot">Connect. Donate. Save. is a free platform that quickly links blood donors with those in need.</p>
+          </div>
+        )}
+
+        {view === 'login' && (
+          <div className="login">
+            <div className="login-header">
+              <div className="login-logo">
+                <div className="login-logo__icon">🩸</div>
+              </div>
+              <div className="login-brand">
+                <div className="login-brand__line">CONNECT</div>
+                <div className="login-brand__line login-brand__line--accent">DONATE</div>
+                <div className="login-brand__line">SAVE</div>
+              </div>
+            </div>
+
+            <form className="login-form" onSubmit={(e) => { 
+              e.preventDefault(); 
+              setShowLoginSuccess(true);
+              setTimeout(() => {
+                setShowLoginSuccess(false);
+                setView('dashboard');
+              }, 2000);
+            }}>
+              <div className="form-group">
+                <label htmlFor="username" className="form-label">Username</label>
+                <Input 
+                  id="username"
+                  type="text" 
+                  className="form-input" 
+                  placeholder="Enter your username"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="password" className="form-label">Password</label>
+                <Input 
+                  id="password"
+                  type="password" 
+                  className="form-input" 
+                  placeholder="Enter your password"
+                  required 
+                />
+              </div>
+
+              <div className="form-links">
+                <button type="button" className="forgot-link as-button" onClick={() => setView('forgot')}>Forgot Password ?</button>
+              </div>
+
+              <Button type="submit" className="login-submit">SUBMIT</Button>
+            </form>
+          </div>
+        )}
+
+        {view === 'signup' && (
+          <div className="signup">
+            <div className="signup-header">
+              <div className="signup-logo">
+                <div className="signup-logo__icon">🩸</div>
+              </div>
+              <div className="signup-brand">
+                <div className="signup-brand__line">CONNECT</div>
+                <div className="signup-brand__line signup-brand__line--accent">DONATE</div>
+                <div className="signup-brand__line">SAVE</div>
+              </div>
+            </div>
+
+            <form className="signup-form" onSubmit={(e) => { 
+              e.preventDefault(); 
+              setShowSignupSuccess(true);
+              setTimeout(() => {
+                setShowSignupSuccess(false);
+                setView('dashboard');
+              }, 3000);
+            }}>
+              <h2 className="signup-title">Create Your Account</h2>
+              
+              <div className="form-group">
+                <label htmlFor="signup-username" className="form-label">Username</label>
+                <Input 
+                  id="signup-username"
+                  type="text" 
+                  className="form-input" 
+                  placeholder="Choose a username"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="signup-email" className="form-label">Email Address</label>
+                <Input 
+                  id="signup-email"
+                  type="email" 
+                  className="form-input" 
+                  placeholder="Enter your email"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="signup-password" className="form-label">Password</label>
+                <Input 
+                  id="signup-password"
+                  type="password" 
+                  className="form-input" 
+                  placeholder="Create a password"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="signup-confirm-password" className="form-label">Confirm Password</label>
+                <Input 
+                  id="signup-confirm-password"
+                  type="password" 
+                  className="form-input" 
+                  placeholder="Confirm your password"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="signup-phone" className="form-label">Phone Number</label>
+                <Input 
+                  id="signup-phone"
+                  type="tel" 
+                  className="form-input" 
+                  placeholder="Enter your phone number"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="signup-blood-type" className="form-label">Blood Type</label>
+                <Select id="signup-blood-type" className="form-input" required>
+                  <option value="">Select your blood type</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </Select>
+              </div>
+
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input type="checkbox" required />
+                  <span>I agree to the <a href="#" className="terms-link">Terms of Service</a> and <a href="#" className="terms-link">Privacy Policy</a></span>
+                </label>
+              </div>
+
+              <div className="form-links">
+                <a href="#" className="forgot-link">Already have an account? Login</a>
+              </div>
+
+              <Button type="submit" className="signup-submit">SUBMIT</Button>
+            </form>
+          </div>
+        )}
+
+        {view === 'forgot' && (
+          <div className="forgot">
+            <div className="forgot-header">
+              <div className="forgot-logo"><div className="forgot-logo__icon">🩸</div></div>
+              <div className="forgot-brand">
+                <div className="forgot-brand__line">CONNECT</div>
+                <div className="forgot-brand__line forgot-brand__line--accent">DONATE</div>
+                <div className="forgot-brand__line">SAVE</div>
+              </div>
+            </div>
+
+            <form className="forgot-form" onSubmit={(e)=>{ e.preventDefault(); setShowLoginSuccess(true); setTimeout(()=>{ setShowLoginSuccess(false); setView('login') }, 2500) }}>
+              <h2 className="forgot-title">Reset your password</h2>
+              <p className="forgot-desc">Enter the email associated with your account and we’ll send you a link to reset your password.</p>
+              <div className="form-group">
+                <label htmlFor="forgot-email" className="form-label">Email Address</label>
+                <Input id="forgot-email" type="email" className="form-input" placeholder="you@example.com" required />
+              </div>
+              <div className="forgot-actions">
+                <Button type="submit" className="forgot-submit">Send Reset Link</Button>
+                <Button type="button" className="forgot-cancel" onClick={()=> setView('login')}>Back to Login</Button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {showLoginSuccess && (
+          <div className="modal" role="dialog" aria-modal="true">
+            <div className="modal__card login-success-modal">
+              <div className="modal__icon">✅</div>
+              <h3 className="modal__title">Logged in successfully!</h3>
+              <p className="modal__desc">Welcome back! You are now logged into your account.</p>
+            </div>
+          </div>
+        )}
+
+        {showSignupSuccess && (
+          <div className="modal" role="dialog" aria-modal="true">
+            <div className="modal__card signup-success-modal">
+              <div className="modal__icon">🎉</div>
+              <h3 className="modal__title">Account created successfully!</h3>
+              <p className="modal__desc">Welcome to BloodLink! Your account has been created and you're now ready to help save lives.</p>
+            </div>
           </div>
         )}
       </main>
