@@ -92,7 +92,7 @@ function App() {
   }
   return (
     <div className="page">
-      {!(view === 'welcome' || view === 'login' || view === 'signup') && (
+      {!(view === 'welcome' || view === 'login' || view === 'signup' || view === 'forgot') && (
       <header className="header">
         <div className="header__left">
           <button className="avatar" aria-label="Open profile" onClick={() => setView('profile')}>
@@ -122,7 +122,7 @@ function App() {
         </button>
       </header>
       )}
-      {mobileMenuOpen && (
+      {mobileMenuOpen && !(view === 'forgot') && (
         <div id="mobile-menu" className="mobile-menu" role="menu">
           <button className="menu-item" onClick={() => { setView('dashboard'); setMobileMenuOpen(false) }}>Home</button>
           <button className="menu-item" onClick={() => { setView('donor-search'); setMobileMenuOpen(false) }}>Donor</button>
@@ -581,6 +581,13 @@ function App() {
 
         {view === 'login' && (
           <div className="login">
+            <div className="login-back">
+              <button className="back-button" onClick={() => setView('welcome')}>
+                <span className="material-symbols-rounded">arrow_back</span>
+                <span className="back-text">Back</span>
+              </button>
+            </div>
+            
             <div className="login-header">
               <div className="login-logo">
                 <div className="login-logo__icon">🩸</div>
@@ -607,6 +614,17 @@ function App() {
                   type="text" 
                   className="form-input" 
                   placeholder="Enter your username"
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="email" className="form-label">Email Address</label>
+                <Input 
+                  id="email"
+                  type="email" 
+                  className="form-input" 
+                  placeholder="Enter your email address"
                   required 
                 />
               </div>
@@ -742,18 +760,9 @@ function App() {
 
         {view === 'forgot' && (
           <div className="forgot">
-            <div className="forgot-header">
-              <div className="forgot-logo"><div className="forgot-logo__icon">🩸</div></div>
-              <div className="forgot-brand">
-                <div className="forgot-brand__line">CONNECT</div>
-                <div className="forgot-brand__line forgot-brand__line--accent">DONATE</div>
-                <div className="forgot-brand__line">SAVE</div>
-              </div>
-            </div>
-
             <form className="forgot-form" onSubmit={(e)=>{ e.preventDefault(); setShowLoginSuccess(true); setTimeout(()=>{ setShowLoginSuccess(false); setView('login') }, 2500) }}>
               <h2 className="forgot-title">Reset your password</h2>
-              <p className="forgot-desc">Enter the email associated with your account and we’ll send you a link to reset your password.</p>
+              <p className="forgot-desc">Enter the email associated with your account and we'll send you a link to reset your password.</p>
               <div className="form-group">
                 <label htmlFor="forgot-email" className="form-label">Email Address</label>
                 <Input id="forgot-email" type="email" className="form-input" placeholder="you@example.com" required />
