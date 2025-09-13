@@ -247,9 +247,57 @@ function getCompatibleBloodTypes(bloodType) {
   return compatibility[bloodType] || [];
 }
 
+// @desc    Register as donor
+// @route   POST /api/donors/register
+// @access  Private
+const registerAsDonor = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  
+  const {
+    firstName,
+    lastName,
+    dateOfBirth,
+    gender,
+    weight,
+    address,
+    emergencyContact
+  } = req.body;
+
+  // Update user profile with donor information
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      role: 'donor',
+      isAvailable: true,
+      'profile.firstName': firstName,
+      'profile.lastName': lastName,
+      'profile.dateOfBirth': dateOfBirth,
+      'profile.gender': gender,
+      'profile.weight': weight,
+      'profile.address': address,
+      'profile.emergencyContact': emergencyContact
+    },
+    { new: true, runValidators: true }
+  ).select('-password -refreshTokens');
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found'
+    });
+  }
+
+  res.status(201).json({
+    success: true,
+    message: 'Successfully registered as donor',
+    data: { user }
+  });
+});
+
 module.exports = {
   searchDonors,
   getDonorProfile,
   getNearbyDonors,
-  matchDonorsForRequest
+  matchDonorsForRequest,
+  registerAsDonor
 };

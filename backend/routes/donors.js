@@ -3,10 +3,11 @@ const {
   searchDonors, 
   getDonorProfile, 
   getNearbyDonors,
-  matchDonorsForRequest
+  matchDonorsForRequest,
+  registerAsDonor
 } = require('../controllers/donorController');
 const { protect, optionalAuth } = require('../middleware/auth');
-const { validatePagination } = require('../middleware/validation');
+const { validatePagination, validateDonorRegistration } = require('../middleware/validation');
 const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
@@ -16,6 +17,7 @@ router.get('/search', optionalAuth, validatePagination, asyncHandler(searchDonor
 router.get('/nearby', optionalAuth, validatePagination, asyncHandler(getNearbyDonors));
 
 // Protected routes
+router.post('/register', protect, validateDonorRegistration, asyncHandler(registerAsDonor));
 router.get('/:id', protect, asyncHandler(getDonorProfile));
 router.post('/match', protect, asyncHandler(matchDonorsForRequest));
 

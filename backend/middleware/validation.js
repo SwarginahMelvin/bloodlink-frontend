@@ -191,6 +191,81 @@ const validatePagination = [
   handleValidationErrors
 ];
 
+// Donor registration validation rules
+const validateDonorRegistration = [
+  body('firstName')
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('First name must be between 2 and 50 characters'),
+  
+  body('lastName')
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Last name must be between 2 and 50 characters'),
+  
+  body('dateOfBirth')
+    .isISO8601()
+    .withMessage('Please provide a valid date of birth')
+    .custom((value) => {
+      const birthDate = new Date(value);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      
+      if (age < 18 || age > 65) {
+        throw new Error('Donor must be between 18 and 65 years old');
+      }
+      return true;
+    }),
+  
+  body('gender')
+    .isIn(['Male', 'Female', 'Other'])
+    .withMessage('Gender must be Male, Female, or Other'),
+  
+  body('weight')
+    .isFloat({ min: 50, max: 200 })
+    .withMessage('Weight must be between 50kg and 200kg'),
+  
+  body('address.street')
+    .trim()
+    .isLength({ min: 5, max: 100 })
+    .withMessage('Street address must be between 5 and 100 characters'),
+  
+  body('address.city')
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('City must be between 2 and 50 characters'),
+  
+  body('address.state')
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('State must be between 2 and 50 characters'),
+  
+  body('address.pincode')
+    .matches(/^[0-9]{6}$/)
+    .withMessage('Pincode must be exactly 6 digits'),
+  
+  body('emergencyContact.name')
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Emergency contact name must be between 2 and 50 characters'),
+  
+  body('emergencyContact.phone')
+    .matches(/^[0-9]{10}$/)
+    .withMessage('Emergency contact phone must be exactly 10 digits'),
+  
+  body('emergencyContact.relationship')
+    .trim()
+    .isLength({ min: 2, max: 30 })
+    .withMessage('Relationship must be between 2 and 30 characters'),
+  
+  handleValidationErrors
+];
+
 module.exports = {
   handleValidationErrors,
   validateUserRegistration,
@@ -198,6 +273,7 @@ module.exports = {
   validateUserUpdate,
   validateBloodRequest,
   validateDonation,
+  validateDonorRegistration,
   validateObjectId,
   validatePagination
 };

@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('combined'));
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://nehhadharshini:Nehha@1115@bloodlink.mdjjxtd.mongodb.net/?retryWrites=true&w=majority&appName=bloodlink';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://nehhadharshini:Nehha%401115@bloodlink.mdjjxtd.mongodb.net/bloodlink?retryWrites=true&w=majority&appName=bloodlink';
 
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
@@ -74,6 +74,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/donors', donorRoutes);
 app.use('/api/requests', requestRoutes);
+app.use('/api/stats', require('./routes/stats'));
 app.use('/api/admin', adminRoutes);
 
 // 404 handler

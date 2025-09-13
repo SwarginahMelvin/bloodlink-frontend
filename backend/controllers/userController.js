@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Donation = require('../models/Donation');
+const BloodRequest = require('../models/BloodRequest');
 const Notification = require('../models/Notification');
 const asyncHandler = require('../middleware/asyncHandler');
 
@@ -182,6 +183,34 @@ const markNotificationAsRead = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Get user blood requests
+// @route   GET /api/users/requests
+// @access  Private
+const getUserRequests = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const requests = await BloodRequest.find({ requester: req.user._id })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await BloodRequest.countDocuments({ requester: req.user._id });
+
+  res.json({
+    success: true,
+    data: {
+      requests,
+      pagination: {
+        current: page,
+        pages: Math.ceil(total / limit),
+        total
+      }
+    }
+  });
+});
+
 module.exports = {
   getProfile,
   updateProfile,
@@ -189,5 +218,6 @@ module.exports = {
   getDonationHistory,
   updateAvailability,
   getNotifications,
-  markNotificationAsRead
+  markNotificationAsRead,
+  getUserRequests
 };

@@ -6,7 +6,8 @@ const {
   getDonationHistory,
   updateAvailability,
   getNotifications,
-  markNotificationAsRead
+  markNotificationAsRead,
+  getUserRequests
 } = require('../controllers/userController');
 const { protect, checkOwnership } = require('../middleware/auth');
 const { validateUserUpdate, validateObjectId, validatePagination } = require('../middleware/validation');
@@ -27,6 +28,9 @@ router.get('/donations', validatePagination, asyncHandler(getDonationHistory));
 
 // Availability
 router.put('/availability', asyncHandler(updateAvailability));
+
+// User requests
+router.get('/requests', validatePagination, asyncHandler(getUserRequests));
 
 // Notifications
 router.get('/notifications', validatePagination, asyncHandler(getNotifications));
