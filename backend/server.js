@@ -45,7 +45,9 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('combined'));
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/bloodlink', {
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://nehhadharshini:Nehha@1115@bloodlink.mdjjxtd.mongodb.net/?retryWrites=true&w=majority&appName=bloodlink';
+
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
